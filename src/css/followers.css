@@ -40,10 +40,15 @@ button {
 
 /* 헤더 */
 .header-followers {
+    position: fixed;
+    top:0;
+    z-index: 20;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     border-bottom: 1px solid #dbdbdb;
+    background-color: #fff;
 }
 
 .header-followers .btn_back {
@@ -57,7 +62,7 @@ button {
 /* 팔로워 목록 */
 .main-followersList {
     /* min-height: 712px; */
-    margin-top: 24px;
+    margin: 77px 0 84px;
     padding: 0 16px;
 }
 .main-followersList .list-followers li {
