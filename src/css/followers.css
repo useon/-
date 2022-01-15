@@ -108,19 +108,19 @@ button {
 .btn-follow {
     width: 56px;
     height: 28px;
-    padding: 7px 11px;
     border-radius: 26px;
-    font-size: 11px;
+    font-size: 10px;
     line-height: 15px;
+    color: #767676;
+    background-color: #fff;
+    border: 1px solid #DBDBDB;
+    padding: 7px 11px;
     margin: 11px 0;
+}
+.btn-follow.following {
     background-color: #F26E22;
     color: #fff;
-    border: none;
-}
-.btn-follow.btn-active {
-    color: #767676;
-    border: 1px solid #DBDBDB;
-    background-color: #fff;
+    border:  1px solid transparent;
 }
 
 
