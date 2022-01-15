@@ -2,7 +2,23 @@
 async function getFollowerData() {
     const token = localStorage.getItem('Token');
     const accountName = localStorage.getItem('Accountname');
-    const res = await fetch(
+    const followingRes = await fetch(
+        `http://146.56.183.55:5050/profile/${accountName}/following`,
+        {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-type': 'application/json',
+            },
+        }
+    );
+    // const followingjson = await followingRes.json();
+    // followingjson.map((following) => {
+    //     const followingAccountArray = [];
+    //     followingAccountArray.psuh(following.accountname);
+    // })
+
+    const followerRes = await fetch(
         `http://146.56.183.55:5050/profile/${accountName}/follower`,
         {
             method: 'GET',
@@ -13,14 +29,14 @@ async function getFollowerData() {
         }
     );
 
-    const json = await res.json();
-    // console.log(json);
-    json.map((follower) => {
+    const followerjson = await followerRes.json();
+    // console.log(followerjson);
+    followerjson.map((follower) => {
         const userName = follower.username;
         const intro = follower.intro;
         const image = follower.image;
-        const searchedUserAccountName = follower.accountname;
-        // console.log(searchedUserAccountName);
+        const followerAccountName = follower.accountname;
+        // console.log(followerAccountName);
         let followersList = (document.querySelector(
             '.list-followers'
         ).innerHTML += `
@@ -32,7 +48,7 @@ async function getFollowerData() {
         <small class="txt_preview txt_ellipsis">${intro}</small>
         </div>
         </a>
-        <button id="${searchedUserAccountName}" class="btn-follow" ></button>
+        <button id="${followerAccountName}" class="btn-follow" ></button>
         </li>
         `);
     });
@@ -42,7 +58,7 @@ async function getFollowerData() {
     for (const followBtn of followBtns) {
         //follow버튼을 클릭했을 때,
         followBtn.addEventListener('click', () => {
-            followBtn.classList.toggle('following');
+            // followBtn.classList.toggle('following');
             const accountName = followBtn.getAttribute('id');
 
             //following 중이라면
@@ -88,6 +104,7 @@ async function getFollowerData() {
                 }
                 Follow();
             }
+            followBtn.classList.toggle('following');
         });
     }
 }
