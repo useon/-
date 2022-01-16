@@ -1,3 +1,7 @@
+body {
+  max-width: 390px;
+  margin: 0 auto;
+}
 /* 로그인제목 */
 .tit_login {
   text-align: center;
@@ -35,6 +39,7 @@ label {
   line-height: 14px;
   color: #EB5757;
   margin-top: 6px;
+  display: none;
 }
 .btn_login {
   background-color: #F26E22;

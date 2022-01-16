@@ -1,5 +1,5 @@
 // ------------------ 이메일 비밀번호 섹션 ------------------- 
-// 유효성검사와 버튼활성화를 위한 변수선언
+// 유효성검사와 버튼활성화
 const btnNext = document.querySelector(".btn_next")
 const formSignIn = document.querySelector('.form_signIn');
 const email = document.querySelector('#inp_loginEmail');
@@ -7,7 +7,7 @@ const pwd = document.querySelector('#inp_loginPw');
 
 const pwdWarn = document.querySelector(".txt_pwdWarn");
 const emailWarnRegExp = document.querySelector(".txt_emailWarn.RegExp");
-// 이메일 유효성검사 정규표현식
+// 이메일 유효성검사
 const exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 email.addEventListener('input', () => {
   if (exptext.test(email.value) == false) {
@@ -18,7 +18,7 @@ email.addEventListener('input', () => {
   } 
 });
 
-// 비밀번호 유효성검사 (6자 이상)
+// 비밀번호 유효성검사
 pwd.addEventListener('input', () => {
   if (pwd.value.length < 6) {
     pwdWarn.style.display = 'inline';
@@ -27,7 +27,7 @@ pwd.addEventListener('input', () => {
   }
 });
 
-// 버튼활성화 => disabled 쓰기
+// 버튼활성화
 formSignIn.addEventListener('input', () => {
   btnAttrChange(); 
 });
@@ -40,11 +40,11 @@ function btnAttrChange() {
   }
 };
 
-// 프로필설정으로 넘어가기 => 섹션을 숨기고 보여주는 처리임
+// 상세 프로필설정으로 넘어가기 (섹션을 숨기고 보여줌)
 const $signIn = document.querySelector('.signIn');
 const $setProfile = document.querySelector('.set_profile');
 
-// 이메일 중복체크 함수
+// 이메일 중복체크
 const url = "http://146.56.183.55:5050";
 async function checkEmailValid(email) {
   const emailData = {
@@ -62,7 +62,6 @@ async function checkEmailValid(email) {
 }
 
 btnNext.addEventListener("click", async () => {
-  // 클릭이벤트 발생 시의 값을 불러와야 하기에 이벤트 함수 안에서 선언
   const emailVal = email.value;
   const emailValid = await checkEmailValid(emailVal)
   if (emailValid) {
@@ -72,13 +71,12 @@ btnNext.addEventListener("click", async () => {
     document.querySelector(".txt_emailWarn.Duplicate").style.display = "inline";
   }
 })
-// 지울때 중복된이메일 입니다 없애기
+// 중복 경고 문구 처리
 email.addEventListener("input", () => {
   document.querySelector(".txt_emailWarn.Duplicate").style.display = "none";
 })
 // ------------------ 프로필 설정 섹션 ------------------- 
 // 데이터(사진) 보내기
-// 데이터를 폼 형식으로 보내주는걸 js로 컨트롤 하는거임
 const imgPre = document.querySelector("#img_pre");
 async function imageUpload(files){
   const formData = new FormData();
@@ -91,19 +89,14 @@ async function imageUpload(files){
   const productImgName = data["filename"];
   return productImgName // 1642158806566.png 이런 형태
 }
-
-// 클릭시, 데이터(사진) -> 서버 -> 다시 내 html img의 src로
 async function profileImage(e) {
-  // e : input:change == 사진 올리기
   const files = e.target.files
   const result = await imageUpload(files)
   imgPre.src = url+"/"+result
-  //console.log(result) => 1642158806566.png 
 }
-// 인풋에 변화가 생기면 해당 태그의 소스값을 서버에서 받아온다
 document.querySelector("#inp_img").addEventListener("change",profileImage)
 
-// 이름 : 공백제외 10자 => html max-length로는 불가능
+// 계정 이름 유효성검사
 const userName = document.querySelector("#inp_name");
 userName.addEventListener('input', nameCheck);
 
@@ -121,16 +114,19 @@ function nameCheck() {
 let nameFlag = false;
 let idFlag = false;
 
-// 계정 아이디 => 영문,숫자,특수문자(.),(_) 
+// 계정 아이디 유효성검사
 const userId = document.querySelector("#inp_Id");
+const warnExp = document.querySelector("#warn_valid");
 userId.addEventListener('input', idCheck);
 userId.addEventListener('input', () => {
   warnDuplicate.style.display = 'none';
+  if (userId.value == '') {
+    warnExp.style.display = 'none';
+  }
 });
 
 function idCheck() {
   const exptext = /^[A-Za-z0-9_.]{1,}$/;
-  const warnExp = document.querySelector("#warn_valid");
   if (!exptext.test(userId.value)) {
     warnExp.style.display = 'inline';
     idFlag = false;
@@ -149,7 +145,7 @@ function btnActive() {
     submitBtn.disabled = true;
   }
 }
-// 종합으로 내 프로필설정값 보내기
+// 회원가입
 const submitBtn = document.querySelector(".btn_start");
 const warnDuplicate = document.querySelector("#warn_userdId");
 
@@ -160,7 +156,6 @@ async function join(){
   const userId = document.querySelector("#inp_Id").value;
   const intro = document.querySelector("#inp_intro").value;
   const imageUrl = document.querySelector("#img_pre").src;
-
 
   try{
       const res = await fetch("http://146.56.183.55:5050/user", {
@@ -179,12 +174,8 @@ async function join(){
               }
           })
       })
-      const json = await res.json();
-      const message = json.message;
       if(res.status==200){
         location.href = "./loginEmail.html"
-      } else if(message == '필수 입력사항을 입력해주세요.') {
-        console.log(json)
       } else {
         warnDuplicate.style.display = 'inline';
       }

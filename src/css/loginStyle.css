@@ -3,6 +3,7 @@ body {
   max-width: 390px;
   font-size: 14px;
   overflow: hidden;
+  margin: 0 auto;
 }
 
 /* -----메인화면----- */
@@ -68,7 +69,7 @@ body {
 .splash {
   position: fixed;
   background-color: #FFF;
-  width: 100vw;
+  width: 390px;
   height: 100vh;
   top: 0;
   display: flex;
