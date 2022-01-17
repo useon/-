@@ -99,10 +99,8 @@ function send() {
 }
 send();
 
-
-
 // API
-console.log(localStorage.getItem("Token"))
+// console.log(localStorage.getItem("Token"))
 // if(localStorage.getItem('Token') && localStorage.getItem('postId')){
 //   getPostData()
 // }
@@ -122,15 +120,10 @@ async function getPostData() {
     }
   })
   const json = await res.json()
-  console.log(json);
   const post = json.post
-  console.log(post);
-
-  
 // 데이터 호출
   const profileImage = post.author.image;
   const username = post.author.username;
-  console.log(username);
   const accountname = post.author.accountname;
   const content = post.content;
   const image = post.image; // 이미지 데이터 삽입 방법 고민
@@ -165,9 +158,7 @@ async function getPostData() {
 
   if(postImgLength > 1) {
     btnSlide.style.display = 'flex'
-    // postImg.src = image.split(',')[0];
     for (let i = 0; i < postImgLength; i++) {
-      console.log(image.split(',')[i]);
       secPost.querySelector('.list_btnSlide').innerHTML += `
       <li><button type="button" class="btn_slide"></button></li>
       `;
@@ -184,3 +175,83 @@ async function getPostData() {
   }
 }
 getPostData()
+// 댓글 불러오기
+async function getPostData() {
+  const url = "http://146.56.183.55:5050";
+  const postId = localStorage.getItem('postId'); // 피드에서 클릭한 게시물의 post_id값
+  const token = localStorage.getItem('Token');
+  const res = await fetch(url+`/post/${postId}/comments`, {
+    method:"GET",
+    headers:{
+      Authorization : `Bearer ${token}`,
+      "Content-type" : "application/json"
+    }
+  })
+  const jsonComment = await res.json()
+  console.log(jsonComment);
+  const comment = jsonComment.comment
+  console.log(comment);
+
+  // 데이터 호출
+  const commentImg = comment.author.image
+  const commentName = comment.author.username
+  const commentCreated = comment.createdAt
+  const commentContent = comment.content
+  // 데이터 입력/출력
+  const listComment = document.querySelector('.list_comment')
+  listComment.innerHTML += `
+    <li>
+      <a href="" class="item_comment">
+        <img src="${commentImg}">
+        <div class="wrap_txt_comment">
+          <strong>${commentName}</strong>
+          <small class="txt_date">${commentCreated}</small>
+        </div>
+      </a>
+      <button type="button" class="btn_more"><img src="../images/icon/icon-more-vertical.png" alt=""></button>
+      <p>${commentContent}</p>
+    </li>
+  `
+}
+// 좋아요
+async function getLike(postId) {
+  const url = `http://146.56.183.55:5050/post/${postId}/heart`;
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+}
+
+async function getUnLike(postId) {
+  const url = `http://146.56.183.55:5050/post/${postId}/unheart`;
+  await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+  });
+}
+
+const likeBtns = document.querySelector(".like_feed");
+
+likeBtns.addEventListener("click", (e) => {
+  const likedPostContent =
+    e.target.parentNode.parentNode.querySelector("data_heart").textContent;
+  const likedPost = json.post.filter(
+    (post) => post.content === likedPostContent
+  );
+  const likeCount = e.target.parentNode.querySelector(".data_heart");
+  if (e.target.src.includes("/images/icon/icon-heart-active.png")) {
+    getUnLike(likedPost[0].id);
+    likeBtns.src = likeBtns.src.replace("heart-active", "heart");
+    likeCount.textContent = +likeCount.textContent - 1;
+  } else {
+    getLike(likedPost[0].id);
+    likeBtns.src = likeBtns.src.replace("heart", "heart-active");
+    likeCount.textContent = +likeCount.textContent + 1;
+  };
+});
